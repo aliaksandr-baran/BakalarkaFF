@@ -26,9 +26,27 @@ import separation_improved as sep
 from separation_improved import thermo
 
 
-def main() -> None:
+# Сценарии растворителя экстрактора. Технологическая схема одинакова —
+# различается только состав растворителя S:
+#   * "clean" — свежая (чистая) ИЖ [BMIM][HSO4]:  x_S = [0, 0, 1]
+#   * "regen" — регенерированная (рециркулируемая) ИЖ с ~2% остаточного MeOH
+SCENARIOS = {
+    "clean": {
+        "title": "ЧИСТАЯ (свежая) ИЖ",
+        "x_S": np.array([0.0, 0.0, 1.0]),
+    },
+    "regen": {
+        "title": "РЕГЕНЕРИРОВАННАЯ (рецикл.) ИЖ",
+        "x_S": np.array([0.001559, 0.019959, 0.978483]),
+    },
+}
+
+
+def main(scenario: str = "regen") -> None:
+    cfg = SCENARIOS[scenario]
     print("=" * 62)
     print(" МОДЕЛИРОВАНИЕ (улучш.): Разделение MTBE-MeOH / [BMIM][HSO4]")
+    print(f" Вариант растворителя: {cfg['title']}")
     print(" Newton-решатель экстрактора + метод Брента для bubble_T")
     print("=" * 62)
 
@@ -40,7 +58,7 @@ def main() -> None:
     ant = thermo.ANT
 
     n_F, x_F = 531.1327, np.array([0.54, 0.46, 0.00])
-    n_S, x_S = 258.3784, np.array([0.001559, 0.019959, 0.978483])
+    n_S, x_S = 258.3784, cfg["x_S"]
     hrs_year = 7920
 
     # --- РАЗДЕЛ 2: Экстрактор (Newton-решатель) ---
@@ -236,4 +254,13 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    # По умолчанию запускаем ОБА сценария растворителя (чистая и рег. ИЖ).
+    # Можно ограничить одним: `python main_simulation_improved.py clean`
+    which = sys.argv[1:] if len(sys.argv) > 1 else list(SCENARIOS.keys())
+    for i, sc in enumerate(which):
+        if sc not in SCENARIOS:
+            print(f"Неизвестный сценарий '{sc}'. Доступно: {list(SCENARIOS)}")
+            continue
+        if i:
+            print("\n\n")
+        main(sc)

@@ -34,12 +34,29 @@ python/
 ```bash
 pip install -r requirements.txt
 
-# Полная симуляция процесса
+# Полная симуляция процесса (вариант с верифиц. данными Excel — регенерированная ИЖ)
 python main_simulation.py
+
+# Улучшенная версия (Newton-решатель экстрактора + метод Брента).
+# Запускает ОБА варианта растворителя — чистая ИЖ и регенерированная ИЖ:
+python main_simulation_improved.py
+# или один из них:
+python main_simulation_improved.py clean
+python main_simulation_improved.py regen
 
 # Тесты
 python -m pytest tests/ -v
 ```
+
+## Варианты растворителя (clean vs regenerated IL)
+
+Технологическая схема одинакова; различается только состав растворителя `S`
+на входе в экстрактор:
+
+| Вариант | `x_S` = [MTBE, MeOH, ИЖ] | Где |
+|---------|--------------------------|-----|
+| **Чистая (свежая) ИЖ** | `[0, 0, 1]` | `main_simulation_improved.py clean`, MATLAB `main_simulation_clean.m` |
+| **Регенерированная ИЖ** | `[0.001559, 0.019959, 0.978483]` | `main_simulation.py`, `main_simulation_improved.py regen`, MATLAB `main_simulation.m` |
 
 ## Mapping MATLAB → Python
 
