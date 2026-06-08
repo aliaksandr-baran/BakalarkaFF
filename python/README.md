@@ -23,9 +23,13 @@ python/
 │   ├── pump.py              Насос (гидравлика, мощность, NPSH)
 │   ├── economics.py         CAPEX (CEPCI) / OPEX / TCI
 │   └── thermo.py            Физические свойства и параметры NRTL/Антуана
+├── separation_improved/     Улучшенный вариант (Newton-решатель + метод Брента)
+│   ├── extractor_newton.py  Одновременный Newton/TRF-решатель экстрактора
+│   └── vle_improved.py      bubble_T (Брент) + надёжный flash
 ├── tests/
 │   └── test_separation.py   Юнит-тесты (pytest)
-├── main_simulation.py       Главный скрипт (оркестратор всех подсистем)
+├── main_simulation.py            Главный скрипт (регенерированная ИЖ, данные Excel)
+├── main_simulation_improved.py   Улучшенный скрипт (оба варианта растворителя)
 └── requirements.txt
 ```
 
